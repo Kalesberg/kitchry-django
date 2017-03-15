@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Client</title>
+		<link rel="stylesheet" type="text/css" href='{% static "clients/style.css" %}'>
+		<script src='{% static "clients/script.js" %}'></script>
+		<script src='{% static "clients/canvasjs.min.js" %}'></script>
+		<script type="text/javascript">
+			window.onload = function () {
+				var chartData = [{{ client.stats }}];
+				var points = [];
+				for(var i = 0; i < chartData.length; i ++) {
+					var point = { x: i+1, y: chartData[i]};
+					points.push(point);
+				}
+				var chart = new CanvasJS.Chart("chartContainer", {
+					theme: "theme1",
+					title: {
+						text: "{{ client.name }} Weight Stats"
+					},
+					animationEnabled: true,
+					axisX: {
+						interval: 1,						
+
+					},
+					axisY: {
+						includeZero: false
+
+					},
+					data: [{
+						type: "line",
+						//lineThickness: 3,
+						dataPoints: points
+					}
+					]
+				});
+
+				chart.render();
+			}
+		</script>
+	</head>
+	<body>
+		<h1>Client Profile</h1>
+		<div class="client">
+			<div class="profile">
+				<img src='{% static "clients/images/avatar/" %}{{ client.profile_img }}' />
+			</div>
+			<div class="info">
+				<h3>{{ client.name }}</h3>
+				<p>{{ client.email }}</p>
+			</div>
+		</div>
+		<div class="container">
+		<br/>
+			<form action="{% url 'clients:client' client.slug %}" method="POST">
+			{% csrf_token %}
+				<p><label for="name">Name :</label><input type="text" name="name" value='{{ client.name }}' /></p>
+				<p><label for="email">Email :</label><input type="text" name="email" value='{{ client.email }}' /></p>
+				<p><label for="description">Description :</label><input type="text" name="description" value='{{ client.description }}' /></p>
+				<p><label for="profile_img">Profile Image :</label><input type="text" name="profile_img"  value='{{ client.profile_img }}' /></p>
+				<p><label for="weight">Weight :</label><input type="text" name="weight" value='{{ client.weight }}' /></p>
+				<p><input type="submit" value="Save" /></p>
+			</form>
+		</div>
+		<div id="chartContainer" style="width: 90%; height: 500px;display: inline-block;"></div>
+	</body>
+</html>

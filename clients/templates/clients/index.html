@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Clients</title>
+		<link rel="stylesheet" type="text/css" href='{% static "clients/style.css" %}'>
+		<script src='{% static "clients/script.js" %}'></script>
+	</head>
+	<body>
+		<h1>Clients listings</h1>
+		<div class="createnew">
+			<a href='{% url "clients:new" %}'>Create new user profile</a>
+		</div>
+		<div class="container">
+		{% for client in clients %}
+			<div class="client">
+				<div class="profile">
+					<img src='{% static "clients/images/avatar/" %}{{ client.profile_img }}' />
+				</div>
+				<div class="info">
+					<h3><a href='{% url "clients:client" client.slug %}'>{{ client.name }}</a></h3>
+					<p>{{ client.description }}</p>
+				</div>
+			</div>
+		{% endfor %}
+		</div>
+	</body>
+</html>
